@@ -44,3 +44,23 @@ def load_data(sales_dataframe: pd.DataFrame, exit_format: List[str]) -> None:
     if "parquet" in exit_format:
         sales_dataframe.to_parquet(path="output/data.parquet", index=False)
         print("Exporting to parquet.")
+
+
+def pipeline_to_calculate_consolidated_sales_kpi(
+    files_path: Path, files_type_to_export: List
+) -> None:
+    """
+    Consolidates the entire pipeline to facilitate user calls.
+    """
+    # defining df_total
+    df_total: pd.DataFrame = extract_and_consolidate_json_files(path=files_path)
+
+    # df_total_with_total_sales
+    df_total_with_total_sales: pd.DataFrame = calculate_kpi_of_total_sales(
+        dataframe=df_total
+    )
+
+    # exporting data
+    load_data(
+        sales_dataframe=df_total_with_total_sales, exit_format=files_type_to_export
+    )
