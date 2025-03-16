@@ -2,6 +2,7 @@
 import glob
 import os
 from pathlib import Path
+from typing import List
 
 # importing third party libraries
 import pandas as pd
@@ -9,9 +10,18 @@ import pandas as pd
 
 # function to extract and cosolidate json file
 def extract_and_consolidate_json_files(path: Path) -> pd.DataFrame:
-    json_files = glob.glob(os.path.join(path, "*.json"))
+    json_files: List[Path] = glob.glob(os.path.join(path, "*.json"))
 
-    dataframes_list = [pd.read_json(json_file) for json_file in json_files]
-    df_total = pd.concat(dataframes_list, ignore_index=True)
+    dataframes_list: List[pd.DataFrame] = [
+        pd.read_json(json_file) for json_file in json_files
+    ]
+    df_total: pd.DataFrame = pd.concat(dataframes_list, ignore_index=True)
 
     return df_total
+
+
+def calculate_kpi_of_total_sales(dataframe: pd.DataFrame) -> pd.DataFrame:
+    new_dataframe: pd.DataFrame = dataframe.copy()
+    new_dataframe["total_sales"] = new_dataframe["Quantidade"] * new_dataframe["Venda"]
+
+    return new_dataframe

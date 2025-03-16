@@ -1,15 +1,23 @@
-# import python standard libraries
+# importing python standard libraries
 from pathlib import Path
 
-# import local modules
-from etl import extract_and_consolidate_json_files
+# importing third party libraries
+import pandas as pd
+
+# importing local modules
+from etl import calculate_kpi_of_total_sales, extract_and_consolidate_json_files
 
 
 def main():
 
-    files_path = Path("data")  # defining path
+    files_path: Path = Path("data")  # defining path
 
-    print(extract_and_consolidate_json_files(path=files_path))
+    df_total: pd.DataFrame = extract_and_consolidate_json_files(path=files_path)
+    print(df_total)
+    df_total_with_total_sales: pd.DataFrame = calculate_kpi_of_total_sales(
+        dataframe=df_total
+    )
+    print(df_total_with_total_sales)
 
 
 if __name__ == "__main__":
